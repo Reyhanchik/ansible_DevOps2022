@@ -58,10 +58,10 @@
   - name: Initializing k8s cluster
     command: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
   
-  - name: Sleep for 5 minutes and timeout
+  - name: Sleep for 3 minutes and timeout
     tags: sleep300
     wait_for:
-      delay: 300
+      delay: 180
       timeout: 0
 
   - name: Creating directory for kubectl
@@ -77,9 +77,14 @@
       cmd: |
         cp -i /etc/kubernetes/admin.conf /home/ec2-user/.kube/config
         chown ec2-user:ec2-user /home/ec2-user/.kube/config
-    
-  - name: Cleaning Caches on RAM
-    shell: echo 3 > /proc/sys/vm/drop_caches
 
   - name: Deploying Flannel on Master Node
     command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    become_user: ec2-user
+
+  - name: Enabling scheduling pods on Master Node
+    command: "kubectl taint nodes --all node-role.kubernetes.io/master-"
+    become_user: ec2-user
+
+  - name: Cleaning Caches on RAM
+    shell: echo 3 > /proc/sys/vm/drop_caches

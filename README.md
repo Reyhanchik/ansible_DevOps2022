@@ -7,16 +7,17 @@
 
     chmod 400 ssh-key.pem
 
-### Third, open inventory file and copy&paste private IP addresses from EC2 instances. For Jenkins, paste the private IP of the Jenkins server. For k8s, paste the private IP of the Kubernetes server.
+### Third, open inventory file and copy&paste private IP addresses from EC2 instances. For Jenkins, paste the private IP of the Jenkins server. For k8s, paste the private IP of the Kubernetes server
     
     vi inventory 
     k8s ansible_host=<Private IP>
     jenkins ansible_host=<Private IP>
 
-### Finally, run the ansible commands one by one. 
+### Finally, run the ansible commands one by one 
 
     ansible-playbook install-jenkins.yml -i inventory
     ansible-playbook install-k8s.yml -i inventory
+
 
 
 Note: Installation might take sometime, please wait till the end. 
