@@ -1,7 +1,7 @@
-[k8s]
-k8s ansible_host=
-k8s ansible_ssh_private_key_file=./ssh-key
-
 [jenikins]
-jenkins ansible_host=
+jenkins ansible_host=0.0.0.0
 jenkins ansible_ssh_private_key_file=./ssh-key
+
+[k8s]
+k8s ansible_host=0.0.0.0
+k8s ansible_ssh_private_key_file=./ssh-key
