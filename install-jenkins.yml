@@ -37,4 +37,22 @@
     ansible.builtin.systemd:
       name: jenkins
       state: started
+  
+  - name: Add docker-ce.repo repository
+    shell: yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+    args:
+      creates: /etc/yum.repos.d/docker-ce.repo
+  
+  - name: Installing Docker, Git, Ansible on Master Node
+    package:
+      name:
+        - docker-ce
+        - git
+        - ansible
+      state: present
 
+  - name: Staring & enabling Docker on Master Node
+    service:
+      name: "docker"
+      state: started
+      enabled: yes
