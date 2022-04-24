@@ -43,16 +43,20 @@
     args:
       creates: /etc/yum.repos.d/docker-ce.repo
   
-  - name: Installing Docker, Git, Ansible on Master Node
+  - name: Installing Docker and Git
     package:
       name:
         - docker-ce
         - git
-        - ansible
       state: present
 
-  - name: Staring & enabling Docker on Master Node
+  - name: Staring & enabling Docker
     service:
       name: "docker"
       state: started
       enabled: yes
+
+  - name: Change file permissions
+    ansible.builtin.file:
+      path: /var/run/docker.sock
+      mode: '0666'
