@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: devops-project
-        image: islom1997/java-app:1.0
+        image: <add your repository and tag from your DockerHub account>
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
