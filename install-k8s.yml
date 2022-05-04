@@ -4,7 +4,6 @@
   remote_user: ec2-user
   become_user: root
   tasks:
-
   - name: Add kubeadm repositories on Master Node
     yum_repository:
       name: kube
@@ -38,6 +37,16 @@
       name: "kubelet"
       state: started
       enabled: yes
+
+  - name: Remove containerd config.toml
+    file: 
+      path: /etc/containerd/config.toml 
+      state: absent
+
+  - name: Restart containerd
+    service:
+      name: containerd
+      state: restarted
 
   - name: Pulling the images of k8s master
     command: kubeadm config images pull
@@ -78,12 +87,16 @@
         cp -i /etc/kubernetes/admin.conf /home/ec2-user/.kube/config
         chown ec2-user:ec2-user /home/ec2-user/.kube/config
 
-  - name: Deploying Flannel on Master Node
-    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  - name: Enabling scheduling pods on Master Node
+    command: "kubectl taint nodes --all node-role.kubernetes.io/master-"
     become_user: ec2-user
 
   - name: Enabling scheduling pods on Master Node
-    command: "kubectl taint nodes --all node-role.kubernetes.io/master-"
+    command: "kubectl taint nodes --all node-role.kubernetes.io/control-plane-"
+    become_user: ec2-user
+
+  - name: Deploying Flannel on Master Node
+    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
     become_user: ec2-user
 
   - name: Cleaning Caches on RAM
